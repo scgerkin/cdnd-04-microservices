@@ -20,7 +20,7 @@ before_script:
 
 jobs:
   exclude:
-    - if: commit_message = "Update README"
+    - if: commit_message = "Add passing CI screenshot"
   include:
     - script: echo "Test Stage scripts go here."
 
