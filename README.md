@@ -1,3 +1,6 @@
+Travis CI: 
+[![Build Status](https://travis-ci.org/scgerkin/cdnd-04-microservices.svg?branch=master)](https://travis-ci.org/scgerkin/cdnd-04-microservices)
+
 # Udagram Image Filtering Application
 
 Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
@@ -14,7 +17,7 @@ The project is split into two parts:
 2. Environment variables will need to be set. These environment variables include database connection details that should not be hard-coded into the application code.
 #### Environment Script
 A file named `set_env.sh` has been prepared as an optional tool to help you configure these variables on your local development environment.
- 
+
 We do _not_ want your credentials to be stored in git. After pulling this `starter` project, run the following command to tell git to stop tracking the script in git but keep it stored locally. This way, you can use the script for your convenience and reduce risk of exposing your credentials.
 `git rm --cached set_env.sh`
 
