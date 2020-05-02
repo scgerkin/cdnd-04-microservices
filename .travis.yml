@@ -29,18 +29,11 @@ jobs:
         - echo $PWD
         - docker --version
         - docker build -t udagram-users --rm .
-    - # will use stage "Build Docker Images"
-      name: For future use with build
-      script: echo "Additional jobs are denoted in this manner."
-
-    - stage: Push Images
-      name: Push API-Users
-      script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker tag udagram-users scgerkin/udagram-users:latest
         - docker push scgerkin/udagram-users
-    -
-      name: For future use with push
+    - # will use stage "Build Docker Images"
+      name: For future use with build
       script: echo "Additional jobs are denoted in this manner."
 
 after_success:
