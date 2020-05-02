@@ -14,6 +14,8 @@ spec:
       labels:
         service: reverseproxy
     spec:
+      nodeSelector:
+        node-class: "reverseproxy"
       containers:
       - name: reverseproxy
         image: scgerkin/udagram-rp:latest
@@ -34,4 +36,4 @@ spec:
     targetPort: 8080
   selector:
     service: reverseproxy
-  type: NodePort
+  type: LoadBalancer
