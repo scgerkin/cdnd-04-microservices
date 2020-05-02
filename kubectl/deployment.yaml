@@ -14,6 +14,8 @@ spec:
       labels:
         app: udagram-feed
     spec:
+      nodeSelector:
+        node-class: "udagram-feed"
       containers:
       - name: udagram-feed
         image: scgerkin/udagram-feed:latest
@@ -109,6 +111,8 @@ spec:
       labels:
         app: udagram-users
     spec:
+      nodeSelector:
+        node-class: "udagram-users"
       containers:
       - name: udagram-users
         image: scgerkin/udagram-users:latest

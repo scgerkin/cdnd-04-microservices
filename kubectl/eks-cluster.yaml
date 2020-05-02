@@ -1,0 +1,43 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: udagram
+  region: us-west-2
+
+nodeGroups:
+  - name: feed
+    instanceType: t2.micro
+    minSize: 1
+    desiredCapacity: 2
+    maxSize: 4
+    labels:
+      nodegroup-type: udagram-feed
+      node-class: "udagram-feed"
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+  - name: users
+    instanceType: t2.micro
+    minSize: 1
+    desiredCapacity: 2
+    maxSize: 4
+    labels:
+      nodegroup-type: udagram-users
+      node-class: "udagram-users"
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+  - name: reverseproxy
+    instanceType: t2.micro
+    minSize: 1
+    desiredCapacity: 1
+    maxSize: 1
+    labels:
+      nodegroup-type: reverseproxy
+      node-class: "reverseproxy"
+  - name: metrics
+    instanceType: t2.micro
+    minSize: 2
+    desiredCapacity: 2
+    maxSize: 2
