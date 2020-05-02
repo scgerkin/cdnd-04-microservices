@@ -5,6 +5,7 @@ node_js:
 branches:
   only:
   - master
+  - f-feed
 
 services:
   - docker
@@ -35,8 +36,15 @@ jobs:
         - docker tag udagram-users scgerkin/udagram-users:latest
         - docker push scgerkin/udagram-users
     - # will use stage "Build Docker Images"
-      name: For future use with build
-      script: echo "Additional jobs are denoted in this manner."
+      name: Build API-Feed
+      script:
+        - cd $ROOT_DIR/api-feed
+        - echo $PWD
+        - docker --version
+        - docker build -t udagram-feed --rm .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker tag udagram-feed scgerkin/udagram-feed:latest
+        - docker push scgerkin/udagram-feed
 
 after_success:
   - echo "This job was run successfully."
