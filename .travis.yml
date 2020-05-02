@@ -2,23 +2,46 @@ language: node_js
 node_js:
   - 12.16.3
 
+branches:
+  only:
+  - master
+
 services:
   - docker
 
-# Pre-testing installs
-install:
-  - echo "nothing needs to be installed"
+install: skip
 
-# Scripts to be run such as tests
+env:
+  global:
+  - ROOT_DIR=$PWD
+
 before_script:
-  - cd api-users
-
-script:
   - docker --version
-  - docker build -t udagram-users --rm .
-  - docker tag udagram-users scgerkin/udagram-users:latest
+
+jobs:
+  include:
+    - script: echo "Test Stage scripts go here."
+
+    - stage: Build Docker Images
+      name: Build API-Users
+      script:
+        - cd $ROOT_DIR/api-users
+        - echo $PWD
+        - docker --version
+        - docker build -t udagram-users --rm .
+    - # will use stage "Build Docker Images"
+      name: For future use with build
+      script: echo "Additional jobs are denoted in this manner."
+
+    - stage: Push Images
+      name: Push API-Users
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker tag udagram-users scgerkin/udagram-users:latest
+        - docker push scgerkin/udagram-users
+    -
+      name: For future use with push
+      script: echo "Additional jobs are denoted in this manner."
 
 after_success:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push scgerkin/udagram-users
-  
+  - echo "This job was run successfully."
