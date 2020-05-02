@@ -19,6 +19,8 @@ before_script:
   - docker --version
 
 jobs:
+  exclude:
+    - if: commit_message = "Update README"
   include:
     - script: echo "Test Stage scripts go here."
 
