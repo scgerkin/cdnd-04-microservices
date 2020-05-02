@@ -1,0 +1,189 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-feed
+  labels:
+    app: udagram-feed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: udagram-feed
+  template:
+    metadata:
+      labels:
+        app: udagram-feed
+    spec:
+      containers:
+      - name: udagram-feed
+        image: scgerkin/udagram-feed:latest
+        ports:
+          - containerPort: 8100
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_HOST
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_DB
+        - name: AWS_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_BUCKET
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_PROFILE
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: JWT_SECRET
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: URL
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lb-feed
+  labels:
+    app: lb-feed
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8100
+  selector:
+    app: udagram-feed
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: udagram-feed
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: udagram-feed
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-users
+  labels:
+    app: udagram-users
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: udagram-users
+  template:
+    metadata:
+      labels:
+        app: udagram-users
+    spec:
+      containers:
+      - name: udagram-users
+        image: scgerkin/udagram-users:latest
+        ports:
+          - containerPort: 8100
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_HOST
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: POSTGRES_DB
+        - name: AWS_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_BUCKET
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: AWS_PROFILE
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: JWT_SECRET
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: udagram-secrets
+              key: URL
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lb-users
+  labels:
+    app: lb-users
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8100
+  selector:
+    app: udagram-users
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: udagram-users
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: udagram-users
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
